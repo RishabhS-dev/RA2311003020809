@@ -3,12 +3,19 @@ const router = express.Router();
 const axios = require("axios");
 const knapsack = require("../vehicle_maintanence_scheduler/scheduler.js");
 
+const DEPOT_API = "http://20.207.122.201/evaluation-service/depots";
+const VEHICLE_API = "http://20.207.122.201/evaluation-service/vehicles";
+
+const headers = {
+    Authorization: "Bearer QkbpxH"
+};
+
 router.get("/schedule", async (req, res) => {
     const start = Date.now();
 
     try {
-        const depotRes = await axios.get("http://20.207.122.201/evaluation-service/depots");
-        const vehicleRes = await axios.get("http://20.207.122.201/evaluation-service/vehicles");
+        const depotRes = await axios.get(DEPOT_API, { headers });
+        const vehicleRes = await axios.get(VEHICLE_API, { headers });
 
         const depots = depotRes.data.depots;
         const vehicles = vehicleRes.data.vehicles;
@@ -20,7 +27,7 @@ router.get("/schedule", async (req, res) => {
 
         const end = Date.now();
 
-        res.json({
+        return res.json({
             success: true,
             source: "api",
             data: result,
@@ -30,22 +37,24 @@ router.get("/schedule", async (req, res) => {
     } catch (err) {
         const end = Date.now();
 
-        res.json({
+        const fallbackVehicles = [
+            { Duration: 1, Impact: 5 },
+            { Duration: 6, Impact: 2 },
+            { Duration: 5, Impact: 5 },
+            { Duration: 7, Impact: 3 }
+        ];
+
+        const fallbackResult = [
+            {
+                depotId: 1,
+                maxImpact: knapsack(fallbackVehicles, 10).maxImpact
+            }
+        ];
+
+        return res.json({
             success: true,
             source: "fallback",
-            data: [
-                {
-                    depotId: 1,
-                    maxImpact: knapsack(
-                        [
-                            { Duration: 1, Impact: 5 },
-                            { Duration: 6, Impact: 2 },
-                            { Duration: 5, Impact: 5 }
-                        ],
-                        10
-                    ).maxImpact
-                }
-            ],
+            data: fallbackResult,
             responseTime: `${end - start} ms`
         });
     }
