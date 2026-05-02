@@ -12,4 +12,5 @@ GET localhost:3000/
 <img width="1274" height="1075" alt="Screenshot 2026-05-02 112250" src="https://github.com/user-attachments/assets/87fa7349-fd49-4faf-95c8-813aefb2cbcf" />
 
 GET /api/schedule
-<img width="1351" height="1082" alt="Screenshot 2026-05-02 112104" src="https://github.com/user-attachments/assets/c7bec91d-26b2-43a7-b6f9-c1cd8c5f9b1e" />
+<img width="1342" height="1081" alt="image" src="https://github.com/user-attachments/assets/c9fa8960-cea5-4b3f-80b4-2c34c67726f8" />
+
